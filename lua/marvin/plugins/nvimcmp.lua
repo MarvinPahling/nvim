@@ -35,6 +35,13 @@ return {
 					behavior = cmp.ConfirmBehavior.Replace,
 					select = true,
 				}),
+				["<Tab>"] = cmp.mapping(function(fallback)
+					if cmp.visible() then
+						cmp.confirm({ select = true })
+					else
+						fallback()
+					end
+				end, { "i", "s" }),
 			}),
 			sources = cmp.config.sources({
 				{ name = "nvim_lsp" },
