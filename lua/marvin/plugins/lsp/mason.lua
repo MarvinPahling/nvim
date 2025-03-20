@@ -44,6 +44,7 @@ return {
 				"lua_ls",
 				"pyright",
 				"bashls",
+				"beautysh",
 				"clangd",
 				"rust_analyzer",
 				"zls", -- Zig
