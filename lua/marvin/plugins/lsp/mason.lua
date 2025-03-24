@@ -42,7 +42,7 @@ return {
 				"dockerls",
 				"nginx_language_server",
 				"lua_ls",
-				"pyright",
+				"basedpyright",
 				"bashls",
 				"clangd",
 				"rust_analyzer",
