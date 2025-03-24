@@ -9,6 +9,7 @@ return {
 		search_workspace = true,
 		anaconda_base_path = "/opt/homebrew/Caskroom/miniconda/base/",
 		anaconda_envs_path = "/opt/homebrew/Caskroom/miniconda/base/envs/",
+		stay_on_this_version = true,
 		-- name = "venv",
 		-- auto_refresh = false
 	},
