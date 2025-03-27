@@ -40,13 +40,15 @@ return {
 				"sqls",
 				"docker_compose_language_service",
 				"dockerls",
-				"nginx_language_server",
+				-- "nginx_language_server",
 				"lua_ls",
 				"basedpyright",
 				"bashls",
 				"clangd",
 				"rust_analyzer",
 				"zls", -- Zig
+				"kotlin-language-server",
+				-- "java_language_server",
 			},
 		})
 
