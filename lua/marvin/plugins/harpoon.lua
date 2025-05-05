@@ -1,18 +1,49 @@
 return {
 	"ThePrimeagen/harpoon",
+	branch = "harpoon2",
 	dependencies = {
 		"nvim-lua/plenary.nvim",
 	},
 	config = function()
-		local keymap = vim.keymap
-		local mark = require("harpoon.mark")
-		local ui = require("harpoon.ui")
-		require("telescope").load_extension("harpoon")
-		keymap.set("n", "<leader>ha", mark.add_file, { desc = "mark current file" })
-		keymap.set("n", "<leader>hr", mark.rm_file, { desc = "remove current file" })
-		keymap.set("n", "<leader>hx", mark.clear_all, { desc = "remove all file" })
-		keymap.set("n", "<leader>hh", "<cmd>Telescope harpoon marks<cr>", { desc = "show harpoon explorer" })
-		keymap.set("n", "<C-h>", ui.nav_next)
-		keymap.set("n", "<C-l>", ui.nav_prev)
+		local harpoon = require("harpoon")
+		harpoon:setup()
+
+		local conf = require("telescope.config").values
+		local function toggle_telescope(harpoon_files)
+			local file_paths = {}
+			for _, item in ipairs(harpoon_files.items) do
+				table.insert(file_paths, item.value)
+			end
+
+			require("telescope.pickers")
+				.new({}, {
+					prompt_title = "Harpoon",
+					finder = require("telescope.finders").new_table({
+						results = file_paths,
+					}),
+					previewer = conf.file_previewer({}),
+					sorter = conf.generic_sorter({}),
+				})
+				:find()
+		end
+
+		vim.keymap.set("n", "<leader>ha", function()
+			harpoon:list():add()
+		end, { desc = "mark current file" })
+		vim.keymap.set("n", "<leader>hr", function()
+			harpoon:list():remove()
+		end, { desc = "remove current file" })
+		vim.keymap.set("n", "<leader>hx", function()
+			harpoon:list():clear()()
+		end, { desc = "remove all file" })
+		vim.keymap.set("n", "<leader>hh", function()
+			toggle_telescope(harpoon:list())
+		end, { desc = "show harpoon explorer" })
+		vim.keymap.set("n", "<C-h>", function()
+			harpoon:list():next()
+		end, { desc = "next harpoon mark" })
+		vim.keymap.set("n", "<C-l>", function()
+			harpoon:list():prev()
+		end, { desc = "previous harpoon mark" })
 	end,
 }

@@ -1,5 +1,5 @@
 vim.cmd("let g:netrw_liststyle = 3")
-local opt = vim.opt 
+local opt = vim.opt
 
 -- tabs & indentation
 opt.tabstop = 2 -- 2 spaces for tabs (prettier default)
