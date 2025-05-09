@@ -1,11 +1,14 @@
 vim.g.mapleader = " "
 
-local keymap = vim.keymap
-
--- window management
-keymap.set("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" }) -- split window vertically
-keymap.set("n", "<leader>sh", "<C-w>s", { desc = "Split window horizontally" }) -- split window horizontally
-keymap.set("n", "<leader>se", "<C-w>=", { desc = "Make splits equal size" }) -- make split windows equal width & height
-keymap.set("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close current split" }) -- close current split window
-keymap.set("n", "<leader>qw", "<cmd>wa | qa<CR>", { desc = "Safe and close all buffers" }) -- close current split window
-keymap.set("n", "<leader>qx", "<cmd>qa!<CR>", { desc = "Force quit all Buffers" }) -- close current split window
+vim.keymap.set("n", "<leader>wv", "<C-w>v", { desc = "Split window vertically" })
+vim.keymap.set("n", "<leader>wh", "<C-w>s", { desc = "Split window horizontally" })
+vim.keymap.set("n", "<leader>we", "<C-w>=", { desc = "Make splits equal size" })
+vim.keymap.set("n", "<leader>wx", "<cmd>close<CR>", { desc = "Close current split" })
+vim.keymap.set("n", "<leader>qw", "<cmd>wa | qa<CR>", { desc = "Safe and close all buffers" })
+vim.keymap.set("n", "<leader>qx", "<cmd>qa!<CR>", { desc = "Force quit all Buffers" })
+vim.keymap.set("n", "<leader>ee", "<cmd>Explore<CR>", { desc = "Open file explorer" })
+vim.keymap.set("n", "<leader>sx", "<cmd>noh<CR>", { desc = "Clear search input" })
+vim.keymap.set("x", "<leader>sr", function()
+	vim.fn.feedkeys(":s/", "n")
+end, { desc = "Find and replace current selection" })
+vim.keymap.set("c", "<leader>cf", "\\(.*\\)", { desc = "Insert fighting one eyed kirby" })
