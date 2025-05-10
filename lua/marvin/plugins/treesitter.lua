@@ -41,6 +41,7 @@ return {
 				"gitignore",
 				"query",
 				"vimdoc",
+				"regex",
 				"c",
 			},
 			incremental_selection = {
