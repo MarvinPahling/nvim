@@ -5,7 +5,6 @@ return {
 		"nvim-lua/plenary.nvim",
 		{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 		"nvim-tree/nvim-web-devicons",
-		"nvim-telescope/telescope-file-browser.nvim",
 	},
 	config = function()
 		local telescope = require("telescope")
@@ -25,21 +24,25 @@ return {
 		})
 
 		telescope.load_extension("fzf")
-		telescope.load_extension("file_browser")
 
-		-- set keymaps
-		local keymap = vim.keymap -- for conciseness
-
-		keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Fuzzy find files in cwd" })
-		keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
-		keymap.set("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", { desc = "Find string in cwd" })
-		keymap.set("n", "<leader>fc", "<cmd>Telescope grep_string<cr>", { desc = "Find string under cursor in cwd" })
-		keymap.set("n", "<leader>fe", "<cmd>Telescope file_browser<cr>", { desc = "Open file Explorer" })
-		keymap.set(
+		vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Fuzzy find files in cwd" })
+		vim.keymap.set("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "Fuzzy find recent files" })
+		vim.keymap.set("n", "<leader>fs", "<cmd>Telescope live_grep<cr>", { desc = "Find string in cwd" })
+		vim.keymap.set(
 			"n",
-			"<leader>fb",
-			"<cmd>Telescope file_browser path=%:p:h select_buffer=true<cr>",
-			{ desc = "Explorer in Buffer CWD" }
+			"<leader>fc",
+			"<cmd>Telescope grep_string<cr>",
+			{ desc = "Find string under cursor in cwd" }
 		)
+		vim.keymap.set("n", "<leader>fc", "<cmd>Telescope commands<cr>", { desc = "Fuzzy find commands" })
+		vim.keymap.set("n", "<leader>ft", "<cmd>Telescope filetypes<cr>", { desc = "Change filetype" })
+
+		vim.keymap.set("n", "<leader>ls", "<cmd>Telescope spell_suggest<cr>", { desc = "Show spell suggest" })
+
+		vim.keymap.set("n", "<leader>vc", "<cmd>Telescope git_commits<cr>", { desc = "Git commits" })
+		vim.keymap.set("n", "<leader>vbc", "<cmd>Telescope git_bcommits<cr>", { desc = "Git buffer commits" })
+		vim.keymap.set("n", "<leader>vs", "<cmd>Telescope git_status<cr>", { desc = "Git status" })
+		vim.keymap.set("n", "<leader>vp", "<cmd>Telescope git_stash<cr>", { desc = "Git stash" })
+		vim.keymap.set("n", "<leader>vf", "<cmd>Telescope git_files<cr>", { desc = "Git files" })
 	end,
 }
