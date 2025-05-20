@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 return {
 	"nvim-treesitter/nvim-treesitter",
 	event = { "BufReadPre", "BufNewFile" },
@@ -14,6 +15,8 @@ return {
 			highlight = {
 				enable = true,
 			},
+			modules = {},
+			additional_vim_regex_highlighting = { "markdown" },
 			-- enable indentation
 			indent = { enable = true },
 			-- enable autotagging (w/ nvim-ts-autotag plugin)
