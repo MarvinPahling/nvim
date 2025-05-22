@@ -109,6 +109,11 @@ return {
 					capabilities = capabilities,
 				})
 			end,
+			["kotlin_language_server"] = function()
+				lspconfig["kotlin_language_server"].setup({
+					capabilities = capabilities,
+				})
+			end,
 		})
 	end,
 }

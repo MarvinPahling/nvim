@@ -16,6 +16,7 @@ return {
 			automatic_installation = true,
 			ensure_installed = {
 				"html",
+				"kotlin_language_server",
 				"cssls",
 				"jsonls",
 				"tailwindcss",
@@ -34,6 +35,7 @@ return {
 		mason_tool_installer.setup({
 			ensure_installed = {
 				"prettier",
+				"ktlint",
 				"stylua",
 				"isort",
 				"black",
