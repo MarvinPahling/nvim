@@ -1,10 +1,11 @@
 return {
 	"linux-cultist/venv-selector.nvim",
+	branch = "regexp",
 	dependencies = { "neovim/nvim-lspconfig", "nvim-telescope/telescope.nvim", "mfussenegger/nvim-dap-python" },
 	opts = {
 		-- Your options go here
 		-- path = "/opt/homebrew/Caskroom/miniconda/base/envs/",
-		name = ".venv",
+		name = { ".venv", "venv", "env", "environment" },
 		auto_refresh = true,
 		search_workspace = true,
 		anaconda_base_path = "/opt/homebrew/Caskroom/miniconda/base/",

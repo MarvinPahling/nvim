@@ -13,7 +13,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup(
-	{ { import = "marvin.plugins" }, { import = "marvin.plugins.lsp" }, { import = "marvin.themes.active" } },
+	{ { import = "marvin.plugins" }, { import = "marvin.themes.active" } },
 	{
 		checker = {
 			enabled = true,
