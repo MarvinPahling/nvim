@@ -52,17 +52,30 @@ return {
     require("mason-lspconfig").setup({
       automatic_enable = true,
       ensure_installed = {
+        -- web
         "html",
         "cssls",
         "jsonls",
         "tailwindcss",
         "ts_ls",
+        -- containerisation and ci/cd
         "docker_compose_language_service",
         "dockerls",
+        "gh_actions_ls",
+        "nginx_language_server",
+        -- lua
         "lua_ls",
+        -- python
         "pyright",
+        -- c/c++
         "clangd",
+        -- rust
         "rust_analyzer",
+        -- java dev
+        "jdtls",
+        "kotlin_language_server",
+        "gradle_ls",
+
       },
       handlers = {
         function(server_name)
@@ -124,18 +137,13 @@ return {
     require('mason-tool-installer').setup {
       ensure_installed = {
         'prettier',
-        'clang-format',
+        'eslint_d',
         'biome',
         'black',
-      },
-      auto_update = false,
-      run_on_start = true,
-      start_delay = 3000,
-      debounce_hours = 5,
-      integrations = {
-        ['mason-lspconfig'] = true,
-        ['mason-null-ls'] = false,
-        ['mason-nvim-dap'] = false,
+        'isort',
+        'clang-format',
+        'stylua',
+        'ktlint'
       },
     }
     local cmp_select = { behavior = cmp.SelectBehavior.Select }
