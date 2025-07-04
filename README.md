@@ -4,6 +4,16 @@
 
 This config uses [nvim-jdtls](https://github.com/mfussenegger/nvim-jdtls) for Java/Kotlin development. In order to make this work you need an instance of [jdtls](https://github.com/eclipse-jdtls/eclipse.jdt.ls), a Java SDK and you have to export the following environment variables
 
+```bash
+# Add to your .zshrc or .bashrc
+export JAVA_PATH="path/to/java/installation"
+export JDTLS_INSTALL_LOCATION="Path/to/jdtls/root/directory"
+export JDTLS_LAUNCHER_JAR="${JDTLS_INSTALL_LOCATION}/plugins/org.eclipse.equinox.launcher_<CHANGE_TO_REAL_VERSION_NUMBER>.jar"
+export JDTLS_CONFIG_DIR="${JDTLS_INSTALL_LOCATION}/config_<CONFIG_FOR_YOUR_OS>"
+export JDTLS_WORKSPACE_ROOT="path/to/workspace/of/your/Java/Kotlin/projects"
+export JDK21_HOME="path/to/your/JDK/installation"
+```
+
 To build `jdtls` from source run clone the official [repo](https://github.com/eclipse-jdtls/eclipse.jdt.ls) and run
 
 ```bash
@@ -22,16 +32,6 @@ and run
 
 ```bash
 ./mvnw clean verify -U -DskipTests=true
-```
-
-```bash
-# Add to your .zshrc or .bashrc
-export JAVA_PATH="path/to/java/installation"
-export JDTLS_INSTALL_LOCATION="Path/to/jdtls/root/directory"
-export JDTLS_LAUNCHER_JAR="${JDTLS_INSTALL_LOCATION}/plugins/org.eclipse.equinox.launcher_<CHANGE_TO_REAL_VERSION_NUMBER>.jar"
-export JDTLS_CONFIG_DIR="${JDTLS_INSTALL_LOCATION}/config_<CONFIG_FOR_YOUR_OS>"
-export JDTLS_WORKSPACE_ROOT="path/to/workspace/of/your/Java/Kotlin/projects"
-export JDK21_HOME="path/to/your/JDK/installation"
 ```
 
 I also recommend to have the path to [Gradle](https://github.com/gradle/gradle) and [Maven](https://github.com/apache/maven) exported in your shell config
