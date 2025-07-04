@@ -2,21 +2,34 @@ return {
 	"mfussenegger/nvim-jdtls",
 	ft = { "java", "kotlin" },
 	config = function()
-		local jdtls_install_location =
-			"/Users/marvin/android-dev/eclipse.jdt.ls/org.eclipse.jdt.ls.product/target/repository"
+		local all_env_vars_present = true
+		local get_env = function(env_var)
+			local value = os.getenv(env_var)
+			if value and value ~= "" then
+				return value
+			end
+			all_env_vars_present = false
+			vim.notify(
+				"environment variable " .. env_var .. " is not present",
+				vim.log.levels.ERROR,
+				{ title = "nvim-jdtls Configuration Error" }
+			)
+		end
 		local paths = {
-			JAVA_PATH = "/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home/bin/java",
-			-- /path/to/jdtls_install_location/plugins/org.eclipse.equinox.launcher_VERSION_NUMBER.jar
-			JDTLS_PATH = jdtls_install_location .. "/plugins/org.eclipse.equinox.launcher_1.7.0.v20250519-0528.jar",
-			-- /path/to/jdtls_install_location/config_SYSTEM
-			JDTLS_CONFIG_PATH = jdtls_install_location .. "/config_mac_arm",
-			WORKSPACE_DIR = "/Users/marvin/android-dev",
+			JAVA_PATH = get_env("JAVA_PATH"),
+			JDTLS_INSTALL_LOCATION = get_env("JDTLS_INSTALL_LOCATION"),
+			JDTLS_LAUNCHER_JAR = get_env("JDTLS_LAUNCHER_JAR"),
+			JDTLS_CONFIG_DIR = get_env("JDTLS_CONFIG_DIR"),
+			JDTLS_WORKSPACE_ROOT = get_env("JDTLS_WORKSPACE_ROOT"),
 			RUNTIMES = {
-				JDK21 = "/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home",
+				JDK21 = get_env("JDK21_HOME"),
 			},
 		}
+		if not all_env_vars_present then
+			return
+		end
 		local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
-		local workspace_dir = paths.WORKSPACE_DIR .. project_name
+		local workspace_dir = paths.JDTLS_WORKSPACE_ROOT .. "/" .. project_name
 		local config = {
 			cmd = {
 				paths.JAVA_PATH,
@@ -32,9 +45,9 @@ return {
 				"--add-opens",
 				"java.base/java.lang=ALL-UNNAMED",
 				"-jar",
-				paths.JDTLS_PATH,
+				paths.JDTLS_LAUNCHER_JAR,
 				"-configuration",
-				paths.JDTLS_CONFIG_PATH,
+				paths.JDTLS_CONFIG_DIR,
 				"-data",
 				workspace_dir,
 			},
