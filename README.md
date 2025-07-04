@@ -14,13 +14,13 @@ export JDTLS_WORKSPACE_ROOT="path/to/workspace/of/your/Java/Kotlin/projects"
 export JDK21_HOME="path/to/your/JDK/installation"
 ```
 
-To build `jdtls` from source run clone the official [repo](https://github.com/eclipse-jdtls/eclipse.jdt.ls) and run
+To build `jdtls` from source clone the official [repo](https://github.com/eclipse-jdtls/eclipse.jdt.ls) and run
 
 ```bash
 JAVA_HOME=/path/to/java/21 ./mvnw clean verify -U -DskipTests=true
 ```
 
-_or_ add the following to your shell config
+*or* add the following to your shell config
 
 ```bash
 # Add to your .zshrc or .bashrc
