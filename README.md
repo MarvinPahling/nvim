@@ -34,7 +34,7 @@ export JDTLS_WORKSPACE_ROOT="path/to/workspace/of/your/Java/Kotlin/projects"
 export JDK21_HOME="path/to/your/JDK/installation"
 ```
 
-I also recommend to have the path to (Gradle)[https://github.com/gradle/gradle] and (Maven)[https://github.com/apache/maven] exported in your shell config
+I also recommend to have the path to [Gradle](https://github.com/gradle/gradle) and [Maven](https://github.com/apache/maven) exported in your shell config
 
 ```bash
 # Add to your .zshrc or .bashrc
