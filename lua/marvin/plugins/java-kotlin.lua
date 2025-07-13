@@ -20,16 +20,24 @@ return {
 			JDTLS_INSTALL_LOCATION = get_env("JDTLS_INSTALL_LOCATION"),
 			JDTLS_LAUNCHER_JAR = get_env("JDTLS_LAUNCHER_JAR"),
 			JDTLS_CONFIG_DIR = get_env("JDTLS_CONFIG_DIR"),
-			JDTLS_WORKSPACE_ROOT = get_env("JDTLS_WORKSPACE_ROOT"),
 			RUNTIMES = {
-				JDK21 = get_env("JDK21_HOME"),
+				JDK21_HOME = get_env("JDK21_HOME"),
+				JDK17_HOME = get_env("JDK17_HOME"),
+				JDK11_HOME = get_env("JDK11_HOME"),
 			},
 		}
 		if not all_env_vars_present then
 			return
 		end
-		local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
-		local workspace_dir = paths.JDTLS_WORKSPACE_ROOT .. "/" .. project_name
+		-- Use a unique workspace directory
+		local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t") -- Get project directory name
+		local workspace_dir = vim.fn.expand("~/.cache/jdtls/workspace/") .. project_name
+
+		-- Ensure workspace directory exists
+		vim.fn.mkdir(workspace_dir, "p")
+		-- some debugging
+		vim.notify(workspace_dir, vim.log.levels.INFO, { title = "workspace_dir" })
+		--
 		local config = {
 			cmd = {
 				paths.JAVA_PATH,
@@ -58,7 +66,16 @@ return {
 						runtimes = {
 							{
 								name = "JavaSE-21",
-								path = paths.RUNTIMES.JDK21,
+								path = paths.RUNTIMES.JDK21_HOME,
+							},
+							{
+								name = "JavaSE-17",
+								path = paths.RUNTIMES.JDK17_HOME,
+							},
+							{
+								name = "JavaSE-11",
+								path = paths.RUNTIMES.JDK11_HOME,
+								default = true,
 							},
 						},
 					},
