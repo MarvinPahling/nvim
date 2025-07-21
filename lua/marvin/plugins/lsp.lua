@@ -13,6 +13,7 @@ return {
 		"j-hui/fidget.nvim",
 		"mfussenegger/nvim-jdtls",
 		"mfussenegger/nvim-dap",
+		"sudormrfbin/cheatsheet.nvim",
 		{ "L3MON4D3/LuaSnip", version = "v2.*", build = "make install_jsregexp" },
 	},
 	config = function()
@@ -62,7 +63,7 @@ return {
 				-- containerisation and ci/cd
 				"docker_compose_language_service",
 				"dockerls",
-				"gh_actions_ls",
+				-- "gh-actions-language-server",
 				"nginx_language_server",
 				-- lua
 				"lua_ls",
@@ -201,5 +202,11 @@ return {
 			},
 		})
 		vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { silent = true, desc = "Show line diagnostics" })
+
+		vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, { desc = "lsp show code actions" })
+		vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, { desc = "lsp rename symbol" })
+		vim.keymap.set("n", "<leader>ls", vim.lsp.buf.signature_help, { desc = "lsp signature helper" })
+		vim.keymap.set("n", "<leader>lth", vim.lsp.buf.typehierarchy, { desc = "lsp type hierarchy" })
+		vim.keymap.set("n", "<leader>lt", vim.lsp.buf.type_definition, { desc = "lsp type definietion" })
 	end,
 }

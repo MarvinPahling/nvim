@@ -15,10 +15,15 @@ vim.keymap.set("n", "<leader>ee", "<cmd>Explore<CR>", { desc = "Open file explor
 
 -- regex
 vim.keymap.set("x", "<leader>sr", function()
-  vim.fn.feedkeys(":s/", "n")
+	vim.fn.feedkeys(":s/", "n")
 end, { desc = "Find and replace current selection" })
 vim.keymap.set("c", "<leader>cf", "\\(.*\\)", { desc = "Insert fighting one eyed kirby" })
 vim.keymap.set("n", "<leader>sx", "<cmd>noh<CR>", { desc = "Clear search input" })
+
+-- programming
+vim.keymap.set("i", "<C-7>", "[]<esc>i", { desc = "Insert []" })
+vim.keymap.set("i", "<C-8>", "{}<esc>i", { desc = "Insert {}" })
+vim.keymap.set("i", "<C-9>", "()<esc>i", { desc = "Insert ()" })
 
 -- spell checking
 vim.keymap.set("n", "<leader>le", "<cmd>setlocal spell spelllang=en_us<CR>", { desc = "Change language to English" })
