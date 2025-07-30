@@ -2,8 +2,8 @@ return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
 		"stevearc/conform.nvim",
-		"mason-org/mason.nvim",
-		"mason-org/mason-lspconfig.nvim",
+		{ "mason-org/mason.nvim", version = "2.*" },
+		{ "mason-org/mason-lspconfig.nvim", version = "2.*" },
 		"WhoIsSethDaniel/mason-tool-installer.nvim",
 		"hrsh7th/cmp-nvim-lsp",
 		"hrsh7th/cmp-buffer",
@@ -31,6 +31,7 @@ return {
 				markdown = { "prettier" },
 				graphql = { "prettier" },
 				liquid = { "prettier" },
+				sh = { "shfmt" },
 				lua = { "stylua" },
 				python = { "isort", "black" },
 				kotlint = { "ktlint" },
@@ -49,6 +50,63 @@ return {
 			vim.lsp.protocol.make_client_capabilities(),
 			cmp_lsp.default_capabilities()
 		)
+
+		vim.lsp.config("*", { capabilities = capabilities })
+		vim.lsp.config("ts_ls", {
+			settings = {
+				completions = {
+					completeFunctionCalls = true,
+				},
+				typescript = {
+					preferences = {
+						includePackageJsonAutoImports = "on",
+					},
+				},
+			},
+		})
+		vim.lsp.config("lua_ls", {
+			settings = {
+				Lua = {
+					diagnostics = {
+						globals = { "vim" },
+					},
+					completion = {
+						callSnippet = "Replace",
+					},
+					format = {
+						enable = true,
+						defaultConfig = {
+							indent_style = "space",
+							indent_size = "2",
+						},
+					},
+				},
+			},
+		})
+
+		vim.lsp.config("pyright", {
+
+			settings = {
+				python = {
+					analysis = {
+						diagnosticMode = "workspace",
+						typeCheckingMode = "basic",
+					},
+				},
+			},
+		})
+		vim.lsp.config("kotlin_language_server", {
+			settings = {
+				kotlin = {
+					compiler = {
+						jvm = {
+							target = "21",
+						},
+					},
+				},
+			},
+		})
+
 		require("fidget").setup({})
 		require("mason").setup()
 		require("mason-lspconfig").setup({
@@ -79,77 +137,8 @@ return {
 				"gradle_ls",
 				-- go
 				"gopls",
-			},
-			handlers = {
-				function(server_name)
-					require("lspconfig")[server_name].setup({
-						capabilities = capabilities,
-					})
-				end,
-				["ts_ls"] = function()
-					local lspconfig = require("lspconfig")
-					lspconfig["ts_ls"].setup({
-						settings = {
-							completions = {
-								completeFunctionCalls = true,
-							},
-						},
-					})
-				end,
-				["lua_ls"] = function()
-					local lspconfig = require("lspconfig")
-					lspconfig.lua_ls.setup({
-						capabilities = capabilities,
-						settings = {
-							Lua = {
-								diagnostics = {
-									globals = { "vim" },
-								},
-								completion = {
-									callSnippet = "Replace",
-								},
-								format = {
-									enable = true,
-									-- Put format options here
-									-- NOTE: the value should be STRING!!
-									defaultConfig = {
-										indent_style = "space",
-										indent_size = "2",
-									},
-								},
-							},
-						},
-					})
-				end,
-				["pyright"] = function()
-					local lspconfig = require("lspconfig")
-					lspconfig["pyright"].setup({
-						capabilities = capabilities,
-						settings = {
-							python = {
-								analysis = {
-									diagnosticMode = "workspace",
-									typeCheckingMode = "basic",
-								},
-							},
-						},
-					})
-				end,
-				["kotlin_language_server"] = function()
-					local lspconfig = require("lspconfig")
-					lspconfig["kotlin_language_server"].setup({
-						capabilities = capabilities,
-						settings = {
-							kotlin = {
-								compiler = {
-									jvm = {
-										target = "21",
-									},
-								},
-							},
-						},
-					})
-				end,
+				-- bash
+				"bashls",
 			},
 		})
 		require("mason-tool-installer").setup({
@@ -162,6 +151,7 @@ return {
 				"clang-format",
 				"stylua",
 				"ktlint",
+				"shfmt",
 			},
 		})
 		local cmp_select = { behavior = cmp.SelectBehavior.Select }
@@ -202,11 +192,14 @@ return {
 			},
 		})
 		vim.keymap.set("n", "<leader>d", vim.diagnostic.open_float, { silent = true, desc = "Show line diagnostics" })
-
 		vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, { desc = "lsp show code actions" })
 		vim.keymap.set("n", "<leader>lr", vim.lsp.buf.rename, { desc = "lsp rename symbol" })
 		vim.keymap.set("n", "<leader>ls", vim.lsp.buf.signature_help, { desc = "lsp signature helper" })
 		vim.keymap.set("n", "<leader>lth", vim.lsp.buf.typehierarchy, { desc = "lsp type hierarchy" })
 		vim.keymap.set("n", "<leader>lt", vim.lsp.buf.type_definition, { desc = "lsp type definietion" })
+
+		vim.diagnostic.config({
+			virtual_lines = true,
+		})
 	end,
 }
