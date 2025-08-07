@@ -39,11 +39,11 @@ return {
 		vim.keymap.set("n", "<leader>hh", function()
 			toggle_telescope(harpoon:list())
 		end, { desc = "show harpoon explorer" })
-		vim.keymap.set("n", "<C-h>", function()
-			harpoon:list():next()
-		end, { desc = "next harpoon mark" })
-		vim.keymap.set("n", "<C-l>", function()
-			harpoon:list():prev()
-		end, { desc = "previous harpoon mark" })
+		-- vim.keymap.set("n", "<C-h>", function()
+		-- 	harpoon:list():next()
+		-- end, { desc = "next harpoon mark" })
+		-- vim.keymap.set("n", "<C-l>", function()
+		-- 	harpoon:list():prev()
+		-- end, { desc = "previous harpoon mark" })
 	end,
 }

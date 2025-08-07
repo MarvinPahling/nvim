@@ -199,7 +199,7 @@ return {
 		vim.keymap.set("n", "<leader>lt", vim.lsp.buf.type_definition, { desc = "lsp type definietion" })
 
 		vim.diagnostic.config({
-			virtual_lines = true,
+			virtual_lines = false,
 		})
 	end,
 }

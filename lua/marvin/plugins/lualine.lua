@@ -8,7 +8,7 @@ return {
 
 			options = {
 				icons_enabled = true,
-				theme = "tokyonight",
+				theme = "vague",
 				section_separators = "",
 				component_separators = "",
 				disabled_filetypes = {
