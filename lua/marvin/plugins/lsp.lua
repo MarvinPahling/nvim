@@ -35,6 +35,7 @@ return {
 				lua = { "stylua" },
 				python = { "isort", "black" },
 				kotlint = { "ktlint" },
+				xml = { "lemminx" },
 			},
 			format_on_save = {
 				lsp_fallback = true,
@@ -139,6 +140,7 @@ return {
 				"gopls",
 				-- bash
 				"bashls",
+				"lemminx",
 			},
 		})
 		require("mason-tool-installer").setup({
