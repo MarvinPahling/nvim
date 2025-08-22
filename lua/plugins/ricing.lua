@@ -57,7 +57,7 @@ return {
 	{
 		{
 			"MeanderingProgrammer/render-markdown.nvim",
-			dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-tree/nvim-web-devicons" }, -- if you prefer nvim-web-devicons
+			dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.icons" },
 			---@module 'render-markdown'
 			---@type render.md.UserConfig
 			opts = {},
@@ -183,6 +183,28 @@ return {
 				vim.keymap.set("n", "<leader>zt", "<cmd>Twilight<cr>", { desc = "Toggle Twilight" })
 				local twilight = require("twilight")
 				twilight.setup({})
+			end,
+		},
+	},
+	{
+		"echasnovski/mini.icons",
+		version = "*",
+		opt = {
+			-- Icon style: 'glyph' or 'ascii'
+			style = "ascii",
+
+			-- Customize per category. See `:h MiniIcons.config` for details.
+			default = {},
+			directory = {},
+			extension = {},
+			file = {},
+			filetype = {},
+			lsp = {},
+			os = {},
+
+			-- Control which extensions will be considered during "file" resolution
+			use_file_extension = function(ext, file)
+				return true
 			end,
 		},
 	},

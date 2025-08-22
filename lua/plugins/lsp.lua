@@ -24,14 +24,12 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		dependencies = {
-			"nvim-lua/plenary.nvim",
 			"stevearc/conform.nvim",
 			{ "mason-org/mason.nvim", version = "2.*" },
 			{ "mason-org/mason-lspconfig.nvim", version = "2.*" },
 			"WhoIsSethDaniel/mason-tool-installer.nvim",
 		},
 		config = function()
-			-- require("plenary").setup()
 			-- add filetype for compose files
 			vim.filetype.add({
 				pattern = {
@@ -57,8 +55,6 @@ return {
 					sh = { "shfmt" },
 					lua = { "stylua" },
 					python = { "isort", "black" },
-					kotlint = { "ktlint" },
-					xml = { "lemminx" },
 				},
 				format_on_save = {
 					lsp_fallback = true,
@@ -130,9 +126,6 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 		event = { "BufReadPre", "BufNewFile" },
 		build = ":TSUpdate",
-		dependencies = {
-			"windwp/nvim-ts-autotag",
-		},
 		config = function()
 			local treesitter = require("nvim-treesitter.configs")
 			treesitter.setup({

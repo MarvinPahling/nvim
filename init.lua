@@ -34,9 +34,6 @@ vim.keymap.set("n", "<leader>sx", "<cmd>close<CR>", { desc = "Close current spli
 vim.keymap.set("n", "<leader>qw", "<cmd>wa | qa<CR>", { desc = "Safe and close all buffers" })
 vim.keymap.set("n", "<leader>qx", "<cmd>qa!<CR>", { desc = "Force quit all Buffers" })
 
--- file explorer
-vim.keymap.set("n", "<leader>ee", "<cmd>Explore<CR>", { desc = "Open file explorer" })
-
 -- regex
 vim.keymap.set("x", "<leader>sr", function()
 	vim.fn.feedkeys(":s/", "n")
