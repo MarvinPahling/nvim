@@ -22,7 +22,6 @@ opt.splitright = true
 opt.splitbelow = true
 opt.swapfile = false
 vim.g.mapleader = " "
-
 -- KEYMAPS
 -- splits
 vim.keymap.set("n", "<leader>sv", "<C-w>v", { desc = "Split window vertically" })
@@ -55,6 +54,7 @@ vim.keymap.set("n", "<C-d>", "<C-d>zz", { desc = "Centers view after Ctrl-d" })
 vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Centers view after Ctrl-u" })
 vim.keymap.set("n", "n", "nzzzv", { desc = 'Centers view after "n" (next result)' })
 vim.keymap.set("n", "N", "Nzzzv", { desc = 'Centers view after "N" (previous result' })
+vim.keymap.set("n", "gl", vim.diagnostic.open_float, { desc = "open line diagnostic" })
 
 -- lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
