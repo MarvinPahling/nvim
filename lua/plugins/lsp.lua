@@ -134,6 +134,7 @@ return {
 		---@module 'blink.cmp'
 		---@type blink.cmp.Config
 		opts = {
+			snippets = { preset = "luasnip" },
 			keymap = {
 				["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
 				["<C-e>"] = { "hide", "fallback" },
@@ -167,7 +168,7 @@ return {
 			},
 			completion = { documentation = { auto_show = false } },
 			sources = {
-				default = { "lsp", "path", "buffer" },
+				default = { "lsp", "path", "snippets", "buffer" },
 			},
 			signature = { enabled = true },
 
@@ -244,6 +245,25 @@ return {
 				zindex = 20,
 				on_attach = nil,
 			})
+		end,
+	},
+	{
+		"L3MON4D3/LuaSnip",
+		version = "v2.*",
+		build = "make install_jsregexp",
+		config = function()
+			local ls = require("luasnip")
+			ls.setup({ enable_autosnippets = true })
+			require("luasnip.loaders.from_lua").load({ paths = { "~/.config/nvim/lua/snippets" } })
+			vim.keymap.set("i", "<C-e>", function()
+				ls.expand_or_jump()
+			end, { silent = true })
+			vim.keymap.set({ "i", "s" }, "<C-J>", function()
+				ls.jump(1)
+			end, { silent = true })
+			vim.keymap.set({ "i", "s" }, "<C-K>", function()
+				ls.jump(-1)
+			end, { silent = true })
 		end,
 	},
 }
