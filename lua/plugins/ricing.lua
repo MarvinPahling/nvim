@@ -191,7 +191,7 @@ return {
 		version = "*",
 		opt = {
 			-- Icon style: 'glyph' or 'ascii'
-			style = "ascii",
+			style = "glyph",
 
 			-- Customize per category. See `:h MiniIcons.config` for details.
 			default = {},
