@@ -56,7 +56,7 @@ return {
 					sh = { "shfmt" },
 					lua = { "stylua" },
 					python = { "isort", "black" },
-					kotlin = { "ktmft" },
+					kotlin = { "ktfmt" },
 				},
 				format_on_save = {
 					lsp_fallback = true,
