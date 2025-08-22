@@ -56,6 +56,7 @@ return {
 					sh = { "shfmt" },
 					lua = { "stylua" },
 					python = { "isort", "black" },
+					kotlin = { "ktmft" },
 				},
 				format_on_save = {
 					lsp_fallback = true,
@@ -93,6 +94,8 @@ return {
 					"bashls",
 					-- xml
 					"lemminx",
+					-- kotlin
+					"kotlin_language_server",
 				},
 			})
 			require("mason-tool-installer").setup({
@@ -105,6 +108,7 @@ return {
 					"clang-format",
 					"stylua",
 					"shfmt",
+					"ktfmt",
 				},
 			})
 
@@ -165,6 +169,7 @@ return {
 			sources = {
 				default = { "lsp", "path", "buffer" },
 			},
+			signature = { enabled = true },
 
 			fuzzy = { implementation = "prefer_rust_with_warning" },
 		},
