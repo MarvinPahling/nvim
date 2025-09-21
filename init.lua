@@ -47,6 +47,8 @@ vim.keymap.set("n", "<leader>sx", "<cmd>noh<CR>", { desc = "Clear search input" 
 vim.keymap.set("i", "<C-7>", "[]<esc>i", { desc = "Insert []" })
 vim.keymap.set("i", "<C-8>", "{}<esc>i", { desc = "Insert {}" })
 vim.keymap.set("i", "<C-9>", "()<esc>i", { desc = "Insert ()" })
+vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "Rename" })
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
 
 -- spell checking
 vim.keymap.set("n", "<leader>le", "<cmd>setlocal spell spelllang=en_us<CR>", { desc = "Change language to English" })
