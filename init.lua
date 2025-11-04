@@ -49,6 +49,10 @@ vim.keymap.set("i", "<C-9>", "()<esc>i", { desc = "Insert ()" })
 vim.keymap.set("n", "<leader>r", vim.lsp.buf.rename, { desc = "Rename" })
 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action" })
 
+vim.keymap.set("n", "<leader>gi", vim.lsp.buf.implementation, { desc = "Go To Implementation" })
+vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, { desc = "Go To Definition" })
+vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, { desc = "Go To References" })
+
 -- spell checking
 vim.keymap.set("n", "<leader>le", "<cmd>setlocal spell spelllang=en_us<CR>", { desc = "Change language to English" })
 vim.keymap.set("n", "<leader>ld", "<cmd>setlocal spell spelllang=de_de<CR>", { desc = "Change language to German" })

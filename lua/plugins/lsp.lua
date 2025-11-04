@@ -1,4 +1,34 @@
 local lsp_configs = {
+	tinymist = {
+		settings = {
+			formatterMode = "typstyle",
+			exportPdf = "onType",
+			semanticTokens = "disable",
+		},
+		on_attach = function(client, bufnr)
+			vim.keymap.set("n", "<leader>tp", function()
+				client:exec_cmd({
+
+					title = "pin",
+
+					command = "tinymist.pinMain",
+
+					arguments = { vim.api.nvim_buf_get_name(0) },
+				}, { bufnr = bufnr })
+			end, { desc = "[T]inymist [P]in", noremap = true })
+
+			vim.keymap.set("n", "<leader>tu", function()
+				client:exec_cmd({
+
+					title = "unpin",
+
+					command = "tinymist.pinMain",
+
+					arguments = { vim.v.null },
+				}, { bufnr = bufnr })
+			end, { desc = "[T]inymist [U]npin", noremap = true })
+		end,
+	},
 	lua_ls = {
 		settings = {
 			Lua = {
@@ -19,20 +49,16 @@ local lsp_configs = {
 		},
 	},
 	clangd = {
-		cmd = {
-			"clangd",
-			"--background-index",
-			"--clang-tidy",
-			"--header-insertion=iwyu",
-			"--completion-style=detailed",
-			"--function-arg-placeholders",
-			"--fallback-style=llvm",
-		},
+		-- Minimal config - let .clangd file handle most settings
+		cmd = { "clangd" },
 		init_options = {
-			usePlaceholders = true,
-			completeUnimported = true,
 			clangdFileStatus = true,
 		},
+	},
+	vhdl_ls = {
+		-- VHDL language server configuration
+		-- Looks for vhdl_ls.toml in project root
+		settings = {},
 	},
 }
 
@@ -47,24 +73,26 @@ return {
 			"saghen/blink.cmp",
 		},
 		config = function()
-			-- add filetype for compose files
+			-- add filetype for some files
 			vim.filetype.add({
 				pattern = {
 					["compose.*%.ya?ml"] = "yaml.docker-compose",
 					["docker%-compose.*%.ya?ml"] = "yaml.docker-compose",
+					["*.typ"] = "typst",
+					["*.puml"] = "plantuml",
 				},
 			})
 			-- formatting
 			require("conform").setup({
 				formatters_by_ft = {
-					javascript = { "prettier" },
-					typescript = { "prettier" },
-					javascriptreact = { "prettier" },
-					typescriptreact = { "prettier" },
+					javascript = { "biome" },
+					typescript = { "biome" },
+					javascriptreact = { "biome" },
+					typescriptreact = { "biome" },
 					svelte = { "prettier" },
 					css = { "prettier" },
 					html = { "prettier" },
-					json = { "prettier" },
+					json = { "biome" },
 					yaml = { "prettier" },
 					markdown = { "prettier" },
 					graphql = { "prettier" },
@@ -73,6 +101,38 @@ return {
 					lua = { "stylua" },
 					python = { "isort", "black" },
 					kotlin = { "ktfmt" },
+					typst = { "tinymist" },
+					c = { "clang_format" },
+					cpp = { "clang_format" },
+					vhdl = { "vsg" },
+					sql = { "sleek" },
+				},
+				formatters = {
+					biome = {
+						command = "biome",
+						args = {
+							"format",
+							"--stdin-file-path",
+							"$FILENAME",
+						},
+						stdin = true,
+					},
+					prettypst = {
+						command = "prettypst",
+						args = { "--style=otbs", "$FILENAME" },
+						stdin = false,
+					},
+					vsg = {
+						command = "vsg",
+						args = {
+							"--fix",
+							"--style",
+							"jcl",
+							"$FILENAME",
+						},
+						stdin = false,
+						exit_codes = { 0, 1, 2 },
+					},
 				},
 				format_on_save = {
 					lsp_fallback = true,
@@ -112,6 +172,10 @@ return {
 					"lemminx",
 					-- kotlin
 					"kotlin_language_server",
+					-- typst
+					"tinymist",
+					-- vhdl
+					"vhdl_ls",
 				},
 			})
 			require("mason-tool-installer").setup({
@@ -125,6 +189,7 @@ return {
 					"stylua",
 					"shfmt",
 					"ktfmt",
+					"vsg",
 				},
 			})
 
@@ -281,5 +346,10 @@ return {
 				ls.jump(-1)
 			end, { silent = true })
 		end,
+	},
+	{
+		"sophieforrest/processing.nvim",
+		lazy = false,
+		version = "^1",
 	},
 }

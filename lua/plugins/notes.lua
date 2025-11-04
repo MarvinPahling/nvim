@@ -1,32 +1,56 @@
 return {
 	{
 		"chomosuke/typst-preview.nvim",
-		lazy = false, -- or ft = 'typst'
+		ft = "typst",
 		version = "1.*",
 		opts = {}, -- lazy.nvim will implicitly calls `setup {}`
+		config = function()
+			require("typst-preview").setup({
+				debug = true,
+				open_cmd = nil,
+				port = 42069,
+
+				-- Setting this to 'always' will invert black and white in the preview
+				-- Setting this to 'auto' will invert depending if the browser has enable
+				-- dark mode
+				-- Setting this to '{"rest": "<option>","image": "<option>"}' will apply
+				-- your choice of color inversion to images and everything else
+				-- separately.
+				invert_colors = "never",
+
+				-- Whether the preview will follow the cursor in the source file
+				follow_cursor = true,
+
+				-- Provide the path to binaries for dependencies.
+				-- Setting this will skip the download of the binary by the plugin.
+				-- Warning: Be aware that your version might be older than the one
+				-- required.
+				dependencies_bin = {
+					["tinymist"] = "tinymist",
+					["websocat"] = vim.fn.exepath("socat") ~= "" and vim.fn.exepath("socat") or nil,
+				},
+
+				-- A list of extra arguments (or nil) to be passed to previewer.
+				-- For example, extra_args = { "--input=ver=draft", "--ignore-system-fonts" }
+				extra_args = nil,
+
+				-- This function will be called to determine the root of the typst project
+				get_root = function(path_of_main_file)
+					local root = os.getenv("TYPST_ROOT")
+					if root then
+						return root
+					end
+					return vim.fn.fnamemodify(path_of_main_file, ":p:h")
+				end,
+
+				-- This function will be called to determine the main file of the typst
+				-- project.
+				get_main_file = function(path_of_buffer)
+					return path_of_buffer
+				end,
+			})
+		end,
 	},
-	-- {
-	-- 	"al-kot/typst-preview.nvim",
-	-- 	config = function()
-	-- 		require("typst-preview").setup({
-	-- 			preview = {
-	-- 				max_width = 80, -- Maximum width of the preview window (columns)
-	-- 				ppi = 144, -- The PPI (pixels per inch) to use for PNG export (high value will affect the performance)
-	-- 				position = "right", -- The position of the preview window relative to the code window
-	-- 			},
-	-- 			statusline = {
-	-- 				enabled = true, -- Show statusline
-	-- 				compile = { -- Last compilation status
-	-- 					ok = { icon = "", color = "#b8bb26" },
-	-- 					ko = { icon = "", color = "#fb4943" },
-	-- 				},
-	-- 				page_count = { -- Page count
-	-- 					color = "#d5c4e1",
-	-- 				},
-	-- 			},
-	-- 		})
-	-- 	end,
-	-- },
 	{
 		"MeanderingProgrammer/render-markdown.nvim",
 		dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.icons" },
