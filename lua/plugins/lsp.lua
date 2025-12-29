@@ -1,66 +1,14 @@
-local lsp_configs = {
-	tinymist = {
-		settings = {
-			formatterMode = "typstyle",
-			exportPdf = "onType",
-			semanticTokens = "disable",
-		},
-		on_attach = function(client, bufnr)
-			vim.keymap.set("n", "<leader>tp", function()
-				client:exec_cmd({
+-- Dynamically load all LSP configs from lua/lsp-configs/
+local lsp_configs = {}
+local config_path = vim.fn.stdpath("config") .. "/lua/lsp-configs"
+local config_files = vim.fn.glob(config_path .. "/*.lua", false, true)
 
-					title = "pin",
-
-					command = "tinymist.pinMain",
-
-					arguments = { vim.api.nvim_buf_get_name(0) },
-				}, { bufnr = bufnr })
-			end, { desc = "[T]inymist [P]in", noremap = true })
-
-			vim.keymap.set("n", "<leader>tu", function()
-				client:exec_cmd({
-
-					title = "unpin",
-
-					command = "tinymist.pinMain",
-
-					arguments = { vim.v.null },
-				}, { bufnr = bufnr })
-			end, { desc = "[T]inymist [U]npin", noremap = true })
-		end,
-	},
-	lua_ls = {
-		settings = {
-			Lua = {
-				diagnostics = {
-					globals = { "vim" },
-				},
-				completion = {
-					callSnippet = "Replace",
-				},
-				format = {
-					enable = true,
-					defaultConfig = {
-						indent_style = "space",
-						indent_size = "2",
-					},
-				},
-			},
-		},
-	},
-	clangd = {
-		-- Minimal config - let .clangd file handle most settings
-		cmd = { "clangd" },
-		init_options = {
-			clangdFileStatus = true,
-		},
-	},
-	vhdl_ls = {
-		-- VHDL language server configuration
-		-- Looks for vhdl_ls.toml in project root
-		settings = {},
-	},
-}
+for _, file in ipairs(config_files) do
+	local config_name = vim.fn.fnamemodify(file, ":t:r")
+	lsp_configs[config_name] = require("lsp-configs." .. config_name)
+end
+---@type blink.cmp.WindowBorder
+local blink_window_border = "bold"
 
 return {
 	{
@@ -92,7 +40,9 @@ return {
 					svelte = { "prettier" },
 					css = { "prettier" },
 					html = { "prettier" },
-					json = { "biome" },
+					json = { "prettier" },
+					json5 = { "prettier" },
+					jsonc = { "prettier" },
 					yaml = { "prettier" },
 					markdown = { "prettier" },
 					graphql = { "prettier" },
@@ -100,12 +50,13 @@ return {
 					sh = { "shfmt" },
 					lua = { "stylua" },
 					python = { "isort", "black" },
+					java = { "palantir_java_format" },
 					kotlin = { "ktfmt" },
 					typst = { "tinymist" },
 					c = { "clang_format" },
 					cpp = { "clang_format" },
 					vhdl = { "vsg" },
-					sql = { "sleek" },
+					sql = { "sqlfluff" },
 				},
 				formatters = {
 					biome = {
@@ -133,6 +84,17 @@ return {
 						stdin = false,
 						exit_codes = { 0, 1, 2 },
 					},
+					palantir_java_format = {
+						command = "./mvnw",
+						args = { "spotless:apply", "-q" },
+						stdin = false,
+						cwd = require("conform.util").root_file({ "mvnw", "pom.xml" }),
+					},
+					sqlfluff = {
+						command = "sqlfluff",
+						args = { "fix", "--force", "-" },
+						stdin = true,
+					},
 				},
 				format_on_save = {
 					lsp_fallback = true,
@@ -148,7 +110,6 @@ return {
 					-- web
 					"html",
 					"cssls",
-					"jsonls",
 					"tailwindcss",
 					"ts_ls",
 					-- containerisation and ci/cd
@@ -190,6 +151,7 @@ return {
 					"shfmt",
 					"ktfmt",
 					"vsg",
+					"sqlfluff",
 				},
 			})
 
@@ -205,6 +167,7 @@ return {
 		opts = {
 			library = {
 				{ path = "${3rd}/luv/library", words = { "vim%.uv" } },
+				"nvim-lspconfig",
 			},
 		},
 		notify = false,
@@ -216,6 +179,7 @@ return {
 		---@type blink.cmp.Config
 		opts = {
 			snippets = { preset = "luasnip" },
+			term = { completion = { ghost_text = { enabled = true } } },
 			keymap = {
 				["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
 				["<C-e>"] = { "hide", "fallback" },
@@ -247,12 +211,17 @@ return {
 			appearance = {
 				nerd_font_variant = "mono",
 			},
-			completion = { documentation = { auto_show = false } },
+			completion = {
+				accept = { auto_brackets = { enabled = false } },
+				documentation = { auto_show = true, window = { border = blink_window_border } },
+				ghost_text = { enabled = false, show_with_menu = true, show_with_selection = true },
+				keyword = { range = "full" },
+				menu = { auto_show = true, border = blink_window_border },
+			},
 			sources = {
 				default = { "lsp", "path", "snippets", "buffer" },
 			},
-			signature = { enabled = true },
-
+			signature = { enabled = true, window = { border = blink_window_border } },
 			fuzzy = { implementation = "prefer_rust_with_warning" },
 		},
 		opts_extend = { "sources.default" },
@@ -348,8 +317,12 @@ return {
 		end,
 	},
 	{
-		"sophieforrest/processing.nvim",
-		lazy = false,
-		version = "^1",
+		"rachartier/tiny-inline-diagnostic.nvim",
+		event = "VeryLazy",
+		priority = 1000,
+		config = function()
+			require("tiny-inline-diagnostic").setup()
+			vim.diagnostic.config({ virtual_text = false }) -- Disable Neovim's default virtual text diagnostics
+		end,
 	},
 }
