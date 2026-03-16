@@ -11,7 +11,7 @@ opt.autoindent = true
 opt.relativenumber = true
 opt.number = true
 opt.wrap = true
-opt.linebreak = true
+opt.linebreak = false
 
 opt.ignorecase = true
 opt.smartcase = true
@@ -51,6 +51,7 @@ vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code Action
 
 vim.keymap.set("n", "<leader>gi", vim.lsp.buf.implementation, { desc = "Go To Implementation" })
 vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, { desc = "Go To Definition" })
+vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, { desc = "Go To Definition" })
 vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, { desc = "Go To References" })
 
 -- spell checking
@@ -63,6 +64,8 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Centers view after Ctrl-u" })
 vim.keymap.set("n", "n", "nzzzv", { desc = 'Centers view after "n" (next result)' })
 vim.keymap.set("n", "N", "Nzzzv", { desc = 'Centers view after "N" (previous result' })
 vim.keymap.set("n", "gl", vim.diagnostic.open_float, { desc = "open line diagnostic" })
+-- make
+vim.keymap.set("n", "<leader>mm", "<cmd>make<CR>", { desc = "Make" })
 
 -- lazy
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"

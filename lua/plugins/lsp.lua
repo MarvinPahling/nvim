@@ -28,8 +28,10 @@ return {
 					["docker%-compose.*%.ya?ml"] = "yaml.docker-compose",
 					["*.typ"] = "typst",
 					["*.puml"] = "plantuml",
+					["*.spade"] = "spade",
 				},
 			})
+
 			-- formatting
 			require("conform").setup({
 				formatters_by_ft = {
@@ -49,7 +51,7 @@ return {
 					liquid = { "prettier" },
 					sh = { "shfmt" },
 					lua = { "stylua" },
-					python = { "isort", "black" },
+					python = { "ruff" },
 					java = { "palantir_java_format" },
 					kotlin = { "ktfmt" },
 					typst = { "tinymist" },
@@ -120,7 +122,7 @@ return {
 					-- lua
 					"lua_ls",
 					-- python
-					"pyright",
+					"ty",
 					-- c/c++
 					"clangd",
 					-- rust
@@ -159,6 +161,9 @@ return {
 			for lsp_name, config in pairs(lsp_configs) do
 				vim.lsp.config(lsp_name, config)
 			end
+			-- enable non-mason servers
+			vim.lsp.enable("spade-language-server")
+			vim.lsp.enable("asm_lsp")
 		end,
 	},
 	{
@@ -231,6 +236,20 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		build = ":TSUpdate",
 		config = function()
+			local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+			require("nvim-treesitter.install").prefer_git = true
+
+			parser_config.spade = {
+				install_info = {
+					url = "https://gitlab.com/spade-lang/tree-sitter-spade/",
+					files = { "src/parser.c" },
+					branch = "main",
+					generate_requires_npm = false,
+					requires_generate_from_grammar = false,
+				},
+				filetype = "spade",
+			}
+
 			local treesitter = require("nvim-treesitter.configs")
 			treesitter.setup({
 				highlight = {
