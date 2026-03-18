@@ -1,100 +1,87 @@
 return {
 	{
-		{
-			"echasnovski/mini.pick",
-			version = "*",
-			config = function()
-				require("mini.pick").setup({
-					-- Delays (in ms; should be at least 1)
-					delay = {
-						-- Delay between forcing asynchronous behavior
-						async = 10,
-						-- Delay between computation start and visual feedback about it
-						busy = 50,
-					},
-
-					-- Keys for performing actions. See `:h MiniPick-actions`.
-					mappings = {
-						caret_left = "<Left>",
-						caret_right = "<Right>",
-
-						choose = "<CR>",
-						choose_in_split = "<C-s>",
-						choose_in_tabpage = "<C-t>",
-						choose_in_vsplit = "<C-v>",
-						choose_marked = "<M-CR>",
-
-						delete_char = "<BS>",
-						delete_char_right = "<Del>",
-						delete_left = "<C-u>",
-						delete_word = "<C-w>",
-
-						mark = "<C-x>",
-						mark_all = "<C-a>",
-
-						move_down = "<C-n>",
-						move_start = "<C-g>",
-						move_up = "<C-p>",
-
-						paste = "<C-r>",
-
-						refine = "<C-Space>",
-						refine_marked = "<M-Space>",
-
-						scroll_down = "<C-f>",
-						scroll_left = "<C-h>",
-						scroll_right = "<C-l>",
-						scroll_up = "<C-b>",
-
-						stop = "<Esc>",
-
-						toggle_info = "<S-Tab>",
-						toggle_preview = "<Tab>",
-					},
-
-					-- General options
-					options = {
-						-- Whether to show content from bottom to top
-						content_from_bottom = false,
-
-						-- Whether to cache matches (more speed and memory on repeated prompts)
-						use_cache = false,
-					},
-
-					-- Source definition. See `:h MiniPick-source`.
-					source = {
-						items = nil,
-						name = nil,
-						cwd = nil,
-
-						match = nil,
-						show = nil,
-						preview = nil,
-
-						choose = nil,
-						choose_marked = nil,
-					},
-
-					-- Window related options
-					window = {
-						-- Float window config (table or callable returning it)
-						config = nil,
-
-						-- String to use as caret in prompt
-						prompt_caret = "▏",
-
-						-- String to use as prefix in prompt
-						prompt_prefix = "> ",
-					},
-				})
-
-				vim.keymap.set("n", "<leader>ff", ":Pick files<CR>", { desc = "Open Pick" })
-				vim.keymap.set("n", "<leader>fs", ":Pick grep_live<CR>", { desc = "Open Pick Search" })
-				vim.keymap.set("n", "<leader>fh", ":Pick help<CR>", { desc = "Open Pick Help" })
-				vim.keymap.set("n", "<leader>fb", ":Pick buffers<CR>", { desc = "Open Pick Buffers" })
-			end,
+		"nvim-telescope/telescope.nvim",
+		version = "*",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-telescope/telescope-ui-select.nvim",
+			"nvim-tree/nvim-web-devicons",
+			"LinArcX/telescope-env.nvim",
+			"aznhe21/actions-preview.nvim",
+			"nvim-telescope/telescope-frecency.nvim",
+			-- optional but recommended
+			{ "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
 		},
+		config = function()
+			require("nvim-web-devicons").setup({
+				color_icons = false,
+				variant = "light|dark",
+				blend = 0,
+			})
+			local telescope = require("telescope")
+			telescope.setup({
+				extensions = {
+					["ui-select"] = {
+						require("telescope.themes").get_dropdown({
+							-- even more opts
+						}),
+
+						-- pseudo code / specification for writing custom displays, like the one
+						-- for "codeactions"
+						-- specific_opts = {
+						--   [kind] = {
+						--     make_indexed = function(items) -> indexed_items, width,
+						--     make_displayer = function(widths) -> displayer
+						--     make_display = function(displayer) -> function(e)
+						--     make_ordinal = function(e) -> string
+						--   },
+						--   -- for example to disable the custom builtin "codeactions" display
+						--      do the following
+						--   codeactions = false,
+						-- }
+					},
+				},
+			})
+			-- To get ui-select loaded and working with telescope, you need to call
+			-- load_extension, somewhere after setup function:
+			telescope.load_extension("ui-select")
+			telescope.load_extension("env")
+			telescope.load_extension("frecency")
+			local builtin = require("telescope.builtin")
+			vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
+			vim.keymap.set("n", "<leader>fs", builtin.live_grep, { desc = "Telescope live grep" })
+			vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
+			vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
+			vim.keymap.set("n", "<leader>fm", builtin.man_pages, { desc = "Telescope show manpage" })
+			vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "Telescope show diagnostics" })
+			vim.keymap.set("n", "<leader>fe", "<cmd>Telescope env<cr>", { desc = "Telescope show environment" })
+
+			vim.keymap.set("n", "<leader>gi", builtin.lsp_implementations, { desc = "Go To Implementation" })
+			vim.keymap.set("n", "<leader>gd", builtin.lsp_definitions, { desc = "Go To Definition" })
+			vim.keymap.set("n", "<leader>gr", builtin.lsp_references, { desc = "Go To References" })
+			vim.keymap.set("n", "<leader>gs", builtin.lsp_document_symbols, { desc = "Go To symbols" })
+			vim.keymap.set("n", "<leader>gws", builtin.lsp_dynamic_workspace_symbols, { desc = "Go To Workspace sym" })
+			vim.keymap.set("n", "<leader>gci", builtin.lsp_incoming_calls, { desc = "Go To Call Incomming" })
+			vim.keymap.set("n", "<leader>gco", builtin.lsp_outgoing_calls, { desc = "Go To Call Outgoing" })
+
+			require("actions-preview").setup({
+				backend = { "telescope" },
+				extensions = { "env" },
+				telescope = vim.tbl_extend("force", require("telescope.themes").get_dropdown(), {}),
+			})
+			vim.keymap.set(
+				"n",
+				"<leader>cpa",
+				require("actions-preview").code_actions,
+				{ desc = "Code Action Preview" }
+			)
+		end,
 	},
+
+	-- vim.keymap.set("n", "<leader>ff", ":Pick files<CR>", { desc = "Open Pick" })
+	-- vim.keymap.set("n", "<leader>fs", ":Pick grep_live<CR>", { desc = "Open Pick Search" })
+	-- vim.keymap.set("n", "<leader>fh", ":Pick help<CR>", { desc = "Open Pick Help" })
+	-- vim.keymap.set("n", "<leader>fb", ":Pick buffers<CR>", { desc = "Open Pick Buffers" })
 	{
 		"stevearc/oil.nvim",
 		dependencies = { "echasnovski/mini.icons" },
@@ -103,7 +90,7 @@ return {
 			require("oil").setup({
 				default_file_explorer = true,
 				columns = {
-					"icon",
+					-- "icon",
 					-- "permissions",
 					-- "size",
 					-- "mtime",

@@ -43,16 +43,16 @@ return {
 		end,
 	},
 	{
-		"MeanderingProgrammer/render-markdown.nvim",
+		"meanderingprogrammer/render-markdown.nvim",
 		dependencies = { "nvim-treesitter/nvim-treesitter", "echasnovski/mini.icons" },
 		---@module 'render-markdown'
-		---@type render.md.UserConfig
+		---@type render.md.userconfig
 		opts = {},
 		config = function()
 			local render = require("render-markdown")
 			vim.keymap.set("n", "<leader>mr", function()
 				render.toggle()
-			end, { desc = "toggle [M]arkdown [R]ender" })
+			end, { desc = "toggle [m]arkdown [r]ender" })
 
 			require("render-markdown").setup({
 				code = {
@@ -82,24 +82,24 @@ return {
 					inline_left = "",
 					inline_right = "",
 					inline_pad = 0,
-					highlight = "RenderMarkdownCode",
-					highlight_info = "RenderMarkdownCodeInfo",
+					highlight = "rendermarkdowncode",
+					highlight_info = "rendermarkdowncodeinfo",
 					highlight_language = nil,
-					highlight_border = "RenderMarkdownCodeBorder",
-					highlight_fallback = "RenderMarkdownCodeFallback",
-					highlight_inline = "RenderMarkdownCodeInline",
+					highlight_border = "rendermarkdowncodeborder",
+					highlight_fallback = "rendermarkdowncodefallback",
+					highlight_inline = "rendermarkdowncodeinline",
 					style = "language",
 				},
 			})
 		end,
 	},
-	{
-		"iamcco/markdown-preview.nvim",
-		cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-		build = "cd app && yarn install",
-		init = function()
-			vim.g.mkdp_filetypes = { "markdown" }
-		end,
-		ft = { "markdown" },
-	},
+	-- {
+	-- 	"iamcco/markdown-preview.nvim",
+	-- 	cmd = { "markdownpreviewtoggle", "markdownpreview", "markdownpreviewstop" },
+	-- 	build = "cd app && yarn install",
+	-- 	init = function()
+	-- 		vim.g.mkdp_filetypes = { "markdown" }
+	-- 	end,
+	-- 	ft = { "markdown" },
+	-- },
 }
