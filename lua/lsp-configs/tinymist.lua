@@ -6,7 +6,7 @@ return {
 		systemFonts = true,
 
 		-- Export settings
-		exportPdf = "onType", -- Options: "never", "onSave", "onType"
+		exportPdf = "never", -- Options: "never", "onSave", "onType"
 		exportTarget = "paged", -- Options: "paged", "html"
 
 		-- Formatter settings

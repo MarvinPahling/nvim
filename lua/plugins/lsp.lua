@@ -59,6 +59,8 @@ return {
 					cpp = { "clang_format" },
 					vhdl = { "vsg" },
 					sql = { "sqlfluff" },
+					asm = { "asmfmt" },
+					make = { "mbake" },
 				},
 				formatters = {
 					biome = {
@@ -118,7 +120,7 @@ return {
 					"docker_compose_language_service",
 					"dockerls",
 					-- "gh-actions-language-server",
-					"nginx_language_server",
+					-- "nginx_language_server",
 					-- lua
 					"lua_ls",
 					-- python
@@ -134,7 +136,7 @@ return {
 					-- xml
 					"lemminx",
 					-- kotlin
-					"kotlin_language_server",
+					"kotlin_lsp",
 					-- typst
 					"tinymist",
 					-- vhdl

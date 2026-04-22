@@ -20,6 +20,12 @@ return {
 			})
 			local telescope = require("telescope")
 			telescope.setup({
+				pickers = {
+					find_files = {
+						no_ignore = true,
+						hidden = true, -- optional, if you also want dotfiles
+					},
+				},
 				extensions = {
 					["ui-select"] = {
 						require("telescope.themes").get_dropdown({
