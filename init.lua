@@ -68,7 +68,9 @@ vim.pack.add({
 	"https://github.com/christoomey/vim-tmux-navigator",
 	"https://github.com/folke/lazydev.nvim",
 	"https://github.com/stevearc/conform.nvim",
-	{ src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1.*") },
+	{ src = "https://github.com/saghen/blink.cmp", version = "1.10.2" },
+	{ src = "https://github.com/nvim-telescope/telescope.nvim", version = "0.1.8" },
+	{ src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" },
 })
 -- Theme
 require("vague").setup({
@@ -83,7 +85,7 @@ require("mason").setup()
 require("mason-lspconfig").setup()
 require("lazydev").setup()
 require("blink.cmp").setup({
-	fuzzy = { implementation = "prefer_rust" },
+	fuzzy = { implementation = "lua" },
 	keymap = {
 		["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
 		["<C-e>"] = { "hide", "fallback" },
@@ -140,6 +142,41 @@ require("conform").setup({
 
 require("oil").setup({
 	watch_for_changes = true,
+	view_options = {
+		show_hidden = true,
+	},
 })
 
 vim.keymap.set("n", "<leader>ee", ":Oil<CR>", { desc = "Open file explorer" })
+
+-- telescope
+local telescope = require("telescope")
+telescope.setup({
+	pickers = {
+		find_files = {
+			no_ignore = true,
+			hidden = true,
+		},
+	},
+	extensions = {
+		["ui-select"] = {
+			require("telescope.themes").get_dropdown({}),
+		},
+	},
+})
+telescope.load_extension("ui-select")
+local builtin = require("telescope.builtin")
+vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
+vim.keymap.set("n", "<leader>fs", builtin.live_grep, { desc = "Telescope live grep" })
+vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
+vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
+vim.keymap.set("n", "<leader>fm", builtin.man_pages, { desc = "Telescope show manpage" })
+vim.keymap.set("n", "<leader>fd", builtin.diagnostics, { desc = "Telescope show diagnostics" })
+
+vim.keymap.set("n", "<leader>gi", builtin.lsp_implementations, { desc = "Go To Implementation" })
+vim.keymap.set("n", "<leader>gd", builtin.lsp_definitions, { desc = "Go To Definition" })
+vim.keymap.set("n", "<leader>gr", builtin.lsp_references, { desc = "Go To References" })
+vim.keymap.set("n", "<leader>gs", builtin.lsp_document_symbols, { desc = "Go To symbols" })
+vim.keymap.set("n", "<leader>gws", builtin.lsp_dynamic_workspace_symbols, { desc = "Go To Workspace sym" })
+vim.keymap.set("n", "<leader>gci", builtin.lsp_incoming_calls, { desc = "Go To Call Incomming" })
+vim.keymap.set("n", "<leader>gco", builtin.lsp_outgoing_calls, { desc = "Go To Call Outgoing" })
