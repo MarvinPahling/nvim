@@ -56,9 +56,17 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz", { desc = "Centers view after Ctrl-u" })
 vim.keymap.set("n", "n", "nzzzv", { desc = 'Centers view after "n" (next result)' })
 vim.keymap.set("n", "N", "Nzzzv", { desc = 'Centers view after "N" (previous result' })
 vim.keymap.set("n", "gl", vim.diagnostic.open_float, { desc = "open line diagnostic" })
+vim.keymap.set("n", "<leader>vpg", function()
+	vim.pack.get()
+end, { desc = "vim.pack: update all plugins" })
+vim.keymap.set("n", "<leader>vpu", function()
+	vim.pack.update()
+end, { desc = "vim.pack: update all plugins" })
+
+vim.keymap.set("n", "<leader>tp", "<cmd>LspTinymistPinMain<CR>", { desc = "Typst Pin" })
 
 vim.pack.add({
-	"https://github.com/neovim/nvim-lspconfig",
+	{ src = "https://github.com/neovim/nvim-lspconfig" },
 	"https://github.com/nvim-mini/mini.nvim",
 	"https://github.com/nvim-lua/plenary.nvim",
 	"https://github.com/vague-theme/vague.nvim",
@@ -68,13 +76,22 @@ vim.pack.add({
 	"https://github.com/christoomey/vim-tmux-navigator",
 	"https://github.com/folke/lazydev.nvim",
 	"https://github.com/stevearc/conform.nvim",
-	{ src = "https://github.com/saghen/blink.cmp", version = "1.10.2" },
+	"https://github.com/folke/trouble.nvim",
+	{ src = "https://github.com/saghen/blink.cmp", version = vim.version.range("*") },
 	{ src = "https://github.com/nvim-telescope/telescope.nvim", version = "0.1.8" },
+	{ src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim" },
 	{ src = "https://github.com/nvim-telescope/telescope-ui-select.nvim" },
+	"https://github.com/AlexandrosAlexiou/kotlin.nvim",
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
+	{ src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects" },
+	{ src = "https://github.com/rebelot/kanagawa.nvim" },
+  "https://github.com/nxuv/just.nvim",
+  "https://github.com/carderne/pi-nvim.git"
 })
+
 -- Theme
 require("vague").setup({
-	transparent = false,
+	transparent = true,
 	bold = true,
 	italic = false,
 })
@@ -82,10 +99,36 @@ vim.cmd.colorscheme("vague")
 
 -- LSP
 require("mason").setup()
-require("mason-lspconfig").setup()
+require("mason-lspconfig").setup({
+	ensure_installed = {},
+})
 require("lazydev").setup()
+pcall(require, "lspconfig")
+
+if vim.fn.exists(":LspRestart") == 0 then
+	vim.api.nvim_create_user_command("LspRestart", function()
+		for _, client in ipairs(vim.lsp.get_clients()) do
+			client:stop(true)
+		end
+		vim.cmd.edit()
+	end, { desc = "Restart all LSP clients" })
+end
+
+if vim.fn.exists(":LspStop") == 0 then
+	vim.api.nvim_create_user_command("LspStop", function()
+		for _, client in ipairs(vim.lsp.get_clients()) do
+			client:stop(true)
+		end
+	end, { desc = "Stop all LSP clients" })
+end
+
+if vim.fn.exists(":LspStart") == 0 then
+	vim.api.nvim_create_user_command("LspStart", function()
+		vim.cmd.edit()
+	end, { desc = "Start LSP clients for current buffer" })
+end
 require("blink.cmp").setup({
-	fuzzy = { implementation = "lua" },
+	fuzzy = { implementation = "prefer_rust_with_warning" },
 	keymap = {
 		["<C-space>"] = { "show", "show_documentation", "hide_documentation" },
 		["<C-e>"] = { "hide", "fallback" },
@@ -110,6 +153,8 @@ require("blink.cmp").setup({
 		["<C-k>"] = { "show_signature", "hide_signature", "fallback" },
 	},
 })
+
+-- =========================================================================
 require("conform").setup({
 	formatters_by_ft = {
 		javascript = { "biome" },
@@ -132,6 +177,8 @@ require("conform").setup({
 		cpp = { "clang_format" },
 		vhdl = { "vsg" },
 		sql = { "sqlfluff" },
+		makefile = { "mbake" },
+		yaml = { "yamlfmt" },
 	},
 	format_on_save = {
 		lsp_fallback = true,
@@ -151,22 +198,36 @@ vim.keymap.set("n", "<leader>ee", ":Oil<CR>", { desc = "Open file explorer" })
 
 -- telescope
 local telescope = require("telescope")
+telescope.load_extension("ui-select")
+-- telescope.load_extension("fzy_native")
 telescope.setup({
-	pickers = {
-		find_files = {
-			no_ignore = true,
-			hidden = true,
+	defaults = {
+		preview = { treesitter = false },
+		color_devicons = true,
+		sorting_strategy = "ascending",
+		borderchars = {
+			"", -- top
+			"", -- right
+			"", -- bottom
+			"", -- left
+			"", -- top-left
+			"", -- top-right
+			"", -- bottom-right
+			"", -- bottom-left
 		},
-	},
-	extensions = {
-		["ui-select"] = {
-			require("telescope.themes").get_dropdown({}),
+		path_displays = { "smart" },
+		layout_config = {
+			height = 100,
+			width = 400,
+			prompt_position = "top",
+			preview_cutoff = 40,
 		},
 	},
 })
-telescope.load_extension("ui-select")
 local builtin = require("telescope.builtin")
+telescope.load_extension("ui-select")
 vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
+vim.keymap.set("n", "<leader>fr", builtin.resume, { desc = "Telescope find files" })
 vim.keymap.set("n", "<leader>fs", builtin.live_grep, { desc = "Telescope live grep" })
 vim.keymap.set("n", "<leader>fb", builtin.buffers, { desc = "Telescope buffers" })
 vim.keymap.set("n", "<leader>fh", builtin.help_tags, { desc = "Telescope help tags" })
@@ -180,3 +241,80 @@ vim.keymap.set("n", "<leader>gs", builtin.lsp_document_symbols, { desc = "Go To 
 vim.keymap.set("n", "<leader>gws", builtin.lsp_dynamic_workspace_symbols, { desc = "Go To Workspace sym" })
 vim.keymap.set("n", "<leader>gci", builtin.lsp_incoming_calls, { desc = "Go To Call Incomming" })
 vim.keymap.set("n", "<leader>gco", builtin.lsp_outgoing_calls, { desc = "Go To Call Outgoing" })
+
+-- require("kotlin").setup({
+-- 	jvm_args = {
+-- 		"-Xmx4g",
+-- 	},
+-- 	-- build_tool = "gradle",
+-- 	-- jdk_for_symbol_resolution = os.getenv("JAVA_HOME"),
+-- 	inlay_hints = {
+-- 		enabled = true, -- Enable inlay hints (auto-enable on LSP attach)
+-- 		parameters = true, -- Show parameter names
+-- 		parameters_compiled = true, -- Show compiled parameter names
+-- 		parameters_excluded = false, -- Show excluded parameter names
+-- 		types_property = true, -- Show property types
+-- 		types_variable = true, -- Show local variable types
+-- 		function_return = true, -- Show function return types
+-- 		function_parameter = true, -- Show function parameter types
+-- 		lambda_return = true, -- Show lambda return types
+-- 		lambda_receivers_parameters = true, -- Show lambda receivers/parameters
+-- 		value_ranges = true, -- Show value ranges
+-- 		kotlin_time = true, -- Show kotlin.time warnings
+-- 	},
+-- 	file_templates = {
+-- 		enabled = false,
+-- 	},
+-- })
+
+vim.lsp.config("tinymist", {
+	settings = {
+		formatterMode = "typstyle",
+		typstExtraArgs = { "main.typ" },
+	},
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = {
+		"svelte",
+		"markdown",
+		"lua",
+		"rust",
+		"typst",
+		"typescript",
+		"javascript",
+		"c",
+		"cpp",
+		"glsl",
+		"zig",
+		"python",
+		"typescriptreact",
+		"react",
+	},
+	callback = function()
+		vim.treesitter.start()
+	end,
+})
+local just = require("just")
+just.setup({
+    fidget_message_limit = 32, -- limit for length of fidget progress message
+    open_qf_on_error = true,   -- opens quickfix when task fails
+    open_qf_on_run = true,     -- opens quickfix when running `run` task (`:JustRun`)
+    open_qf_on_any = false;    -- opens quickfix when running any task (overrides other open_qf options)
+    autoscroll_qf = true,      -- automatically scroll quickfix window on output
+    register_commands = true,  -- if set to true then commands (:Just*) will be registered
+    notify = vim.notify,       -- what to use to show messages/errors
+})
+
+vim.keymap.set("n", "<leader>fj", just.run_task_select, { desc = "Telescope Just" })
+
+require("pi-nvim").setup({
+  socket_path = nil, 
+  set_default_keymaps = true,
+})
+
+vim.keymap.set("n", "<leader>pp", ":PiSend<CR>")
+vim.keymap.set("n", "<leader>pf", ":PiSendFile<CR>")
+vim.keymap.set("v", "<leader>ps", ":PiSendSelection<CR>")
+vim.keymap.set("n", "<leader>pb", ":PiSendBuffer<CR>")
+vim.keymap.set("n", "<leader>pi", ":PiPing<CR>")
