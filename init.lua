@@ -85,8 +85,7 @@ vim.pack.add({
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
 	{ src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects" },
 	{ src = "https://github.com/rebelot/kanagawa.nvim" },
-  "https://github.com/nxuv/just.nvim",
-  "https://github.com/carderne/pi-nvim.git"
+	"https://github.com/folke/which-key.nvim",
 })
 
 -- Theme
@@ -96,6 +95,31 @@ require("vague").setup({
 	italic = false,
 })
 vim.cmd.colorscheme("vague")
+
+-- Which-key
+local wk = require("which-key")
+wk.setup({ preset = "helix" })
+wk.add({
+	{ "<leader>s", group = "Split / Substitute" },
+	{ "<leader>q", group = "Quit" },
+	{ "<leader>l", group = "Spell language" },
+	{ "<leader>c", group = "Code" },
+	{ "<leader>e", group = "Explorer" },
+	{ "<leader>f", group = "Find" },
+	{ "<leader>g", group = "Go to" },
+	{ "<leader>gc", group = "Calls" },
+	{ "<leader>gw", group = "Workspace" },
+	{ "<leader>t", group = "Typst" },
+	{ "<leader>v", group = "Vim" },
+	{ "<leader>vp", group = "vim.pack" },
+	{
+		"<leader>?",
+		function()
+			wk.show({ global = false })
+		end,
+		desc = "Buffer-local keymaps",
+	},
+})
 
 -- LSP
 require("mason").setup()
@@ -242,31 +266,6 @@ vim.keymap.set("n", "<leader>gws", builtin.lsp_dynamic_workspace_symbols, { desc
 vim.keymap.set("n", "<leader>gci", builtin.lsp_incoming_calls, { desc = "Go To Call Incomming" })
 vim.keymap.set("n", "<leader>gco", builtin.lsp_outgoing_calls, { desc = "Go To Call Outgoing" })
 
--- require("kotlin").setup({
--- 	jvm_args = {
--- 		"-Xmx4g",
--- 	},
--- 	-- build_tool = "gradle",
--- 	-- jdk_for_symbol_resolution = os.getenv("JAVA_HOME"),
--- 	inlay_hints = {
--- 		enabled = true, -- Enable inlay hints (auto-enable on LSP attach)
--- 		parameters = true, -- Show parameter names
--- 		parameters_compiled = true, -- Show compiled parameter names
--- 		parameters_excluded = false, -- Show excluded parameter names
--- 		types_property = true, -- Show property types
--- 		types_variable = true, -- Show local variable types
--- 		function_return = true, -- Show function return types
--- 		function_parameter = true, -- Show function parameter types
--- 		lambda_return = true, -- Show lambda return types
--- 		lambda_receivers_parameters = true, -- Show lambda receivers/parameters
--- 		value_ranges = true, -- Show value ranges
--- 		kotlin_time = true, -- Show kotlin.time warnings
--- 	},
--- 	file_templates = {
--- 		enabled = false,
--- 	},
--- })
-
 vim.lsp.config("tinymist", {
 	settings = {
 		formatterMode = "typstyle",
@@ -295,26 +294,3 @@ vim.api.nvim_create_autocmd("FileType", {
 		vim.treesitter.start()
 	end,
 })
-local just = require("just")
-just.setup({
-    fidget_message_limit = 32, -- limit for length of fidget progress message
-    open_qf_on_error = true,   -- opens quickfix when task fails
-    open_qf_on_run = true,     -- opens quickfix when running `run` task (`:JustRun`)
-    open_qf_on_any = false;    -- opens quickfix when running any task (overrides other open_qf options)
-    autoscroll_qf = true,      -- automatically scroll quickfix window on output
-    register_commands = true,  -- if set to true then commands (:Just*) will be registered
-    notify = vim.notify,       -- what to use to show messages/errors
-})
-
-vim.keymap.set("n", "<leader>fj", just.run_task_select, { desc = "Telescope Just" })
-
-require("pi-nvim").setup({
-  socket_path = nil, 
-  set_default_keymaps = true,
-})
-
-vim.keymap.set("n", "<leader>pp", ":PiSend<CR>")
-vim.keymap.set("n", "<leader>pf", ":PiSendFile<CR>")
-vim.keymap.set("v", "<leader>ps", ":PiSendSelection<CR>")
-vim.keymap.set("n", "<leader>pb", ":PiSendBuffer<CR>")
-vim.keymap.set("n", "<leader>pi", ":PiPing<CR>")
